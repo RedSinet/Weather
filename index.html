@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+<style>
+  body { background: url(fonstola.ru_316416.jpg); 
+    background-size: 100%;
+  } 
+  .text {
+    text-align:  center;
+  }
+  #str {
+    width: 50px;
+    transform: rotate(45deg);
+  }
+</style>
+  <body>
+    <p  class = "text"><b>Введите название города:</b></p>
+
+    <img id="img1" alt="Грозовая туча смайлик гиф анимация картинки" hidden src=http://wdesk.ucoz.net/_ph/173/2/264827378.gif?1657535406>
+    <img id="img2" alt="Солнце разноцветное смайлик гиф анимация картинки" hidden src=http://wdesk.ucoz.net/_ph/173/2/222375109.gif?1657535507>
+    <div class = "text">
+        <br>
+        <input id="input">
+        <button id="b1" onclick="getWeather()">Узнать погоду</button>
+      <p>Ощущается как <span id="feelsLike"></span></p>
+      <p>Температура <span id="temperature"></span></p>
+      <p>Ветер <span id="deg"></span></p> <img id = "str" src ="md_5a9bf38a19367.png">
+    </div>
+  
+  </body>
+
+  <script>
+    async function getWeather() {
+      let deg = null;
+      let City = document.querySelector("#input").value;
+      let url =
+        "https://api.openweathermap.org/data/2.5/weather?q=" +
+        City +
+        "&appid=94b622f57b6d0e2789cf8197b8b600b9";
+      let response = await fetch(url);
+      if (response.ok) {
+        // если HTTP-статус в диапазоне 200-299
+        // получаем тело ответа (см. про этот метод ниже)
+        let json = await response.json();
+        console.log(json);
+        document.querySelector("#feelsLike").textContent = Math.ceil((json.main.feels_like- 273.15)) + '°C';
+        document.querySelector("#temperature").textContent = Math.ceil((json.main.temp- 273.15)) + '°C';
+        let WindWay = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "CЗ", "C"];
+        deg = Math.floor((json.wind.deg + 22.5) / 45);
+        document.querySelector("#deg").textContent = WindWay[deg];
+        document.querySelector("#str").style.transform = 'rotate('+json.wind.deg+'deg)';
+        
+        if (json.weather[0].main === "Rain") {
+          document.querySelector("#img1").hidden = false;
+           document.querySelector("#img2").hidden = true
+      }
+        else{
+          document.querySelector("#img1").hidden = true;
+           document.querySelector("#img2").hidden = false
+        }
+      } else {
+        alert("Ошибка HTTP: " + response.status);
+      }
+    }
+
+  </script>
+</html>/
